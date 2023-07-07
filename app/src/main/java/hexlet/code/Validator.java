@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class Validator {
-    public StringSchema string() {
+    public final StringSchema string() {
         return new StringSchema();
     }
 
-    public NumberSchema number() {
+    public final NumberSchema number() {
         return new NumberSchema();
     }
 
-    public MapSchema map() {
+    public final MapSchema map() {
         return new MapSchema();
     }
 }

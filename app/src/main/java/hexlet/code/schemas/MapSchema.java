@@ -12,24 +12,24 @@ public class MapSchema extends BaseSchema {
     private Map<String, BaseSchema> schemas = new HashMap<>();
 
 
-    public MapSchema required() {
+    public final MapSchema required() {
         this.isRequired = Boolean.TRUE;
         return this;
     }
 
-    public MapSchema sizeof(int size) {
+    public final MapSchema sizeof(int size) {
         this.minSize = size;
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema> shapeSchemas) {
+    public final MapSchema shape(Map<String, BaseSchema> shapeSchemas) {
         this.schemas.clear();
         this.schemas.putAll(shapeSchemas);
         return this;
     }
 
     @Override
-    public boolean isValid(Object object) {
+    public final boolean isValid(Object object) {
         if (object == null) {
             return !isRequired;
         }
