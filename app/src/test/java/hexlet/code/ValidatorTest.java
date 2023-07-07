@@ -89,4 +89,51 @@ class ValidatorTest {
         data.put("key2", "value2");
         assertTrue(mapSchema.isValid(data));
     }
+
+    @Test
+    void mapWithShape() {
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        MapSchema mapSchema = validator.map();
+
+        schemas.put("name", validator.string().required());
+        schemas.put("age", validator.number().positive().range(18, 100));
+
+        mapSchema.shape(schemas);
+
+        Map<String, Object> human1 = new HashMap<>();
+        human1.put("name", "Kolya");
+        human1.put("age", 100);
+        assertTrue(mapSchema.isValid(human1));
+
+        Map<String, Object> otherMap = new HashMap<>();
+        otherMap.put("key", "value");
+        otherMap.put("key2", "value2");
+        assertFalse(mapSchema.isValid(otherMap));
+
+        Map<String, Object> human2 = new HashMap<>();
+        human2.put("name", "Maya");
+        human2.put("age", null);
+        assertTrue(mapSchema.isValid(human2));
+
+        human2.put("weight", 50);
+        assertTrue(mapSchema.isValid(human2));
+
+        Map<String, Object> human3 = new HashMap<>();
+        human3.put("name", "");
+        human3.put("age", null);
+        assertFalse(mapSchema.isValid(human3));
+
+        Map<String, Object> human4 = new HashMap<>();
+        human4.put("name", "Valya");
+        human4.put("age", -5);
+        assertFalse(mapSchema.isValid(human4));
+
+        Map<String, Object> humanoid = new HashMap<>();
+        human4.put("name", 123);
+        human4.put("age", 5);
+        assertFalse(mapSchema.isValid(humanoid));
+
+        mapSchema.sizeof(3);
+        assertFalse(mapSchema.isValid(human1));
+    }
 }
