@@ -34,23 +34,23 @@ public class MapSchema extends BaseSchema {
             return !isRequired;
         }
 
-        if (!(object instanceof Map<?, ?>)) {
+        if (!checkInstance(object)) {
             return false;
         }
 
-        Map<String, Object> map = (Map<String, Object>) object;
-
-        if (minSize != null && map.size() < minSize) {
-            return false;
-        }
-
-        if (!schemas.isEmpty()) {
-            return checkBySchemas(map);
-        }
-        return true;
+        Map<?, ?> map = (Map<?, ?>) object;
+        return checkMinSize(map) && checkBySchemas(map);
     }
 
-    private boolean checkBySchemas(Map<String, ?> map) {
+    private boolean checkInstance(Object object) {
+        return (object instanceof Map<?, ?>);
+    }
+
+    private boolean checkMinSize(Map<?, ?> map) {
+        return !(minSize != null && map.size() < minSize);
+    }
+
+    private boolean checkBySchemas(Map<?, ?> map) {
         for (Map.Entry<String, BaseSchema> schemaEntry : schemas.entrySet()) {
             if (!schemaEntry.getValue().isValid(map.get(schemaEntry.getKey()))) {
                 return false;

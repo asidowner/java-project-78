@@ -38,18 +38,17 @@ public class NumberSchema extends BaseSchema {
 
         int number = ((Number) object).intValue();
 
-        if (this.isPositive && number <= 0) {
-            return false;
-        }
+        return checkPositive(number) && checkRange(number);
+    }
 
-        if (rangeStart != null && rangeEnd != null) {
-            return !checkRange(number);
-        }
-
-        return true;
+    private boolean checkPositive(int number) {
+        return !this.isPositive || number > 0;
     }
 
     private boolean checkRange(int number) {
-        return number < Math.min(rangeStart, rangeEnd) || number > Math.max(rangeStart, rangeEnd);
+        if (rangeStart != null && rangeEnd != null) {
+            return number >= Math.min(rangeStart, rangeEnd) && number <= Math.max(rangeStart, rangeEnd);
+        }
+        return true;
     }
 }

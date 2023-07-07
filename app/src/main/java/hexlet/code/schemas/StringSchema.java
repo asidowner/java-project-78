@@ -28,11 +28,7 @@ public class StringSchema extends BaseSchema {
 
     @Override
     public final boolean isValid(Object object) {
-        if (object == null) {
-            return !isRequired;
-        }
-
-        if (object.toString().equals("")) {
+        if (object == null || object.toString().equals("")) {
             return !isRequired;
         }
 
@@ -42,11 +38,7 @@ public class StringSchema extends BaseSchema {
 
         String text = object.toString();
 
-        if (!checkMinLength(text)) {
-            return false;
-        }
-
-        return checkContains(text);
+        return checkMinLength(text) && checkContains(text);
     }
 
     private boolean checkMinLength(String text) {
