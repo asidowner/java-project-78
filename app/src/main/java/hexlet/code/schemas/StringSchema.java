@@ -8,12 +8,12 @@ public class StringSchema extends BaseSchema {
     private int minLengthValue = 0;
     private String containedText = "";
 
-    public StringSchema required() {
+    public final StringSchema required() {
         this.isRequired = Boolean.TRUE;
         return this;
     }
 
-    public StringSchema minLength(int minLength) {
+    public final StringSchema minLength(int minLength) {
         if (minLength < 0) {
             throw new RuntimeException("The minimum length must be greater than zero");
         }
@@ -21,13 +21,13 @@ public class StringSchema extends BaseSchema {
         return this;
     }
 
-    public StringSchema contains(String contained) {
+    public final StringSchema contains(String contained) {
         this.containedText = contained;
         return this;
     }
 
     @Override
-    public boolean isValid(Object object) {
+    public final boolean isValid(Object object) {
         if (object == null) {
             return !isRequired;
         }

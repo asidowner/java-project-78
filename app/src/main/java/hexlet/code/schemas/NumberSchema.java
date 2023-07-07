@@ -9,25 +9,25 @@ public class NumberSchema extends BaseSchema {
     private Integer rangeStart;
     private Integer rangeEnd;
 
-    public NumberSchema required() {
+    public final NumberSchema required() {
         this.isRequired = Boolean.TRUE;
         return this;
     }
 
-    public NumberSchema positive() {
+    public final NumberSchema positive() {
         this.isPositive = Boolean.TRUE;
         return this;
     }
 
 
-    public NumberSchema range(int start, int end) {
+    public final NumberSchema range(int start, int end) {
         this.rangeStart = start;
         this.rangeEnd = end;
         return this;
     }
 
     @Override
-    public boolean isValid(Object object) {
+    public final boolean isValid(Object object) {
         if (object == null) {
             return !isRequired;
         }
