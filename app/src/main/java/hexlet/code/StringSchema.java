@@ -3,13 +3,13 @@ package hexlet.code;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class StringSchema {
-    private Boolean required = Boolean.FALSE;
+public class StringSchema extends BaseSchema {
+    private Boolean isRequired = Boolean.FALSE;
     private int minLengthValue = 0;
     private String containedText = "";
 
     public StringSchema required() {
-        required = Boolean.TRUE;
+        this.isRequired = Boolean.TRUE;
         return this;
     }
 
@@ -26,13 +26,14 @@ public class StringSchema {
         return this;
     }
 
+    @Override
     public boolean isValid(Object object) {
         if (object == null) {
-            return !required;
+            return !isRequired;
         }
 
         if (object.toString().equals("")) {
-            return !required;
+            return !isRequired;
         }
 
         if (!(object instanceof String)) {

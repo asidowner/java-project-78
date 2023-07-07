@@ -38,4 +38,30 @@ class ValidatorTest {
         assertThrows(RuntimeException.class, () -> stringSchema.minLength(-1));
     }
 
+    @Test
+    void number() {
+        NumberSchema numberSchema = validator.number();
+        assertTrue(numberSchema.isValid(null));
+        assertTrue(numberSchema.positive().isValid(null));
+
+        numberSchema.required();
+        assertFalse(numberSchema.isValid(null));
+        assertFalse(numberSchema.isValid("5"));
+        assertTrue(numberSchema.isValid(10));
+
+        assertFalse(numberSchema.isValid(-10));
+        assertFalse(numberSchema.isValid(0));
+
+        numberSchema.range(5, 10);
+        assertTrue(numberSchema.isValid(5));
+        assertTrue(numberSchema.isValid(10));
+        assertFalse(numberSchema.isValid(4));
+        assertFalse(numberSchema.isValid(11));
+
+        numberSchema.range(10, 5);
+        assertTrue(numberSchema.isValid(5));
+        assertTrue(numberSchema.isValid(10));
+        assertFalse(numberSchema.isValid(4));
+        assertFalse(numberSchema.isValid(11));
+    }
 }
