@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
-public abstract class BaseSchema<T, S extends BaseSchema<?, ?>> {
+public abstract class BaseSchema<T> {
     private Boolean isRequired = Boolean.FALSE;
     protected Map<String, Predicate<T>> checks = new HashMap<>();
 

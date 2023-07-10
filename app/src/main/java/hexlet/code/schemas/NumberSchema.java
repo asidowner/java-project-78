@@ -3,7 +3,7 @@ package hexlet.code.schemas;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class NumberSchema extends BaseSchema<Number, NumberSchema> {
+public class NumberSchema extends BaseSchema<Number> {
 
     public NumberSchema() {
         addCheck("isInstanceOf", Objects::nonNull);
