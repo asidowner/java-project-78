@@ -1,15 +1,17 @@
 package hexlet.code.schemas;
 
-import lombok.NoArgsConstructor;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-@NoArgsConstructor
-public class StringSchema extends BaseSchema {
-    private Boolean isRequired = Boolean.FALSE;
-    private int minLengthValue = 0;
-    private String containedText = "";
+public class StringSchema extends BaseSchema<String, StringSchema> {
+
+    public StringSchema() {
+        addCheck("isInstanceOf", Objects::nonNull);
+    }
 
     public final StringSchema required() {
-        this.isRequired = Boolean.TRUE;
+        super.setIsRequired();
+        addCheck("isNotEmpty", string -> !string.equals(""));
         return this;
     }
 
@@ -17,35 +19,13 @@ public class StringSchema extends BaseSchema {
         if (minLength < 0) {
             throw new RuntimeException("The minimum length must be greater than zero");
         }
-        this.minLengthValue = minLength;
+        addCheck("minSize", string -> string.length() >= minLength);
         return this;
     }
 
     public final StringSchema contains(String contained) {
-        this.containedText = contained;
+        Predicate<String> predicate = string -> string.contains(contained);
+        addCheck("isContain", predicate);
         return this;
-    }
-
-    @Override
-    public final boolean isValid(Object object) {
-        if (object == null || object.toString().equals("")) {
-            return !isRequired;
-        }
-
-        if (!(object instanceof String)) {
-            return false;
-        }
-
-        String text = object.toString();
-
-        return checkMinLength(text) && checkContains(text);
-    }
-
-    private boolean checkMinLength(String text) {
-        return text.length() >= minLengthValue;
-    }
-
-    private boolean checkContains(String text) {
-        return text.contains(containedText);
     }
 }

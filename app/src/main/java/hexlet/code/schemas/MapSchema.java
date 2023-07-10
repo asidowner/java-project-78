@@ -1,61 +1,34 @@
 package hexlet.code.schemas;
 
-import lombok.NoArgsConstructor;
-
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-@NoArgsConstructor
-public class MapSchema extends BaseSchema {
-    private Boolean isRequired = Boolean.FALSE;
-    private Integer minSize;
-    private Map<String, BaseSchema> schemas = new HashMap<>();
-
+public class MapSchema extends BaseSchema<Map<String, Object>, MapSchema> {
+    public MapSchema() {
+        addCheck("isInstanceOf", Objects::nonNull);
+    }
 
     public final MapSchema required() {
-        this.isRequired = Boolean.TRUE;
+        super.setIsRequired();
         return this;
     }
 
     public final MapSchema sizeof(int size) {
-        this.minSize = size;
+        Predicate<Map<String, Object>> predicate = map -> map.size() >= size;
+        super.addCheck("isMoreThanMinSize", predicate);
         return this;
     }
 
     public final MapSchema shape(Map<String, BaseSchema> shapeSchemas) {
-        this.schemas.clear();
-        this.schemas.putAll(shapeSchemas);
+        Predicate<Map<String, Object>> predicate = map -> shapeSchemas.entrySet().stream()
+                .allMatch(entry -> {
+                    if (!map.containsKey(entry.getKey())) {
+                        return false;
+                    }
+                    return entry.getValue().isValid(map.get(entry.getKey()));
+                });
+        super.addCheck("isVerifyBySchema", predicate);
         return this;
-    }
-
-    @Override
-    public final boolean isValid(Object object) {
-        if (object == null) {
-            return !isRequired;
-        }
-
-        if (!checkInstance(object)) {
-            return false;
-        }
-
-        Map<?, ?> map = (Map<?, ?>) object;
-        return checkMinSize(map) && checkBySchemas(map);
-    }
-
-    private boolean checkInstance(Object object) {
-        return (object instanceof Map<?, ?>);
-    }
-
-    private boolean checkMinSize(Map<?, ?> map) {
-        return !(minSize != null && map.size() < minSize);
-    }
-
-    private boolean checkBySchemas(Map<?, ?> map) {
-        for (Map.Entry<String, BaseSchema> schemaEntry : schemas.entrySet()) {
-            if (!schemaEntry.getValue().isValid(map.get(schemaEntry.getKey()))) {
-                return false;
-            }
-        }
-        return true;
     }
 }

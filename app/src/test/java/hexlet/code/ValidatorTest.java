@@ -23,7 +23,7 @@ class ValidatorTest {
     }
 
     @Test
-    void testValidator() {
+    void testString() {
         StringSchema stringSchema = validator.string();
         assertTrue(stringSchema.isValid(null));
         assertTrue(stringSchema.isValid(""));
@@ -46,7 +46,7 @@ class ValidatorTest {
     }
 
     @Test
-    void number() {
+    void testNumber() {
         NumberSchema numberSchema = validator.number();
         assertTrue(numberSchema.isValid(null));
         assertTrue(numberSchema.positive().isValid(null));
@@ -73,7 +73,7 @@ class ValidatorTest {
     }
 
     @Test
-    void map() {
+    void testMap() {
         MapSchema mapSchema = validator.map();
 
         assertTrue(mapSchema.isValid(null));
@@ -95,7 +95,7 @@ class ValidatorTest {
     }
 
     @Test
-    void mapWithShape() {
+    void testMapWithShape() {
         Map<String, BaseSchema> schemas = new HashMap<>();
         MapSchema mapSchema = validator.map();
 

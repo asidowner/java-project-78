@@ -1,54 +1,31 @@
 package hexlet.code.schemas;
 
-import lombok.NoArgsConstructor;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-@NoArgsConstructor
-public class NumberSchema extends BaseSchema {
-    private Boolean isRequired = Boolean.FALSE;
-    private Boolean isPositive = Boolean.FALSE;
-    private Integer rangeStart;
-    private Integer rangeEnd;
+public class NumberSchema extends BaseSchema<Number, NumberSchema> {
+
+    public NumberSchema() {
+        addCheck("isInstanceOf", Objects::nonNull);
+    }
 
     public final NumberSchema required() {
-        this.isRequired = Boolean.TRUE;
+        super.setIsRequired();
         return this;
     }
 
+
     public final NumberSchema positive() {
-        this.isPositive = Boolean.TRUE;
+        addCheck("isPositive", number -> number.intValue() > 0);
         return this;
     }
 
 
     public final NumberSchema range(int start, int end) {
-        this.rangeStart = start;
-        this.rangeEnd = end;
+        int minValue = Math.min(start, end);
+        int maxValue = Math.max(start, end);
+        Predicate<Number> predicate = number -> number.intValue() >= minValue && number.intValue() <= maxValue;
+        addCheck("isInRange", predicate);
         return this;
-    }
-
-    @Override
-    public final boolean isValid(Object object) {
-        if (object == null) {
-            return !isRequired;
-        }
-
-        if (!(object instanceof Number)) {
-            return false;
-        }
-
-        int number = ((Number) object).intValue();
-
-        return checkPositive(number) && checkRange(number);
-    }
-
-    private boolean checkPositive(int number) {
-        return !this.isPositive || number > 0;
-    }
-
-    private boolean checkRange(int number) {
-        if (rangeStart != null && rangeEnd != null) {
-            return number >= Math.min(rangeStart, rangeEnd) && number <= Math.max(rangeStart, rangeEnd);
-        }
-        return true;
     }
 }
