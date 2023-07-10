@@ -1,14 +1,9 @@
 package hexlet.code.schemas;
 
-import java.util.Objects;
+
 import java.util.function.Predicate;
 
 public class StringSchema extends BaseSchema<String, StringSchema> {
-
-    public StringSchema() {
-        addCheck("isInstanceOf", Objects::nonNull);
-    }
-
     public final StringSchema required() {
         super.setIsRequired();
         addCheck("isNotEmpty", string -> !string.equals(""));
